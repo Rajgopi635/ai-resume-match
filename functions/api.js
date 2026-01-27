@@ -16,7 +16,23 @@ headers: {
 body: JSON.stringify({
 model: "llama-3.1-8b-instant",
 messages: [
-{ role: "user", content: prompt }
+{
+role: "user",
+content: `
+Analyze this resume against the job description below.
+
+Return ONLY ONE clean paragraph (no bullets, no markdown, no JSON, no percentages per skill).
+
+Include:
+- Overall match percentage
+- Short professional summary
+- Key strengths
+- Any main gap (if exists)
+
+Resume + JD:
+${prompt}
+`
+}
 ]
 })
 });
