@@ -16,10 +16,13 @@ method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
-body:JSON.stringify({
-prompt:jd
+body: JSON.stringify({
+  model: "llama-3.1-8b-instant",
+  messages: [
+    { role: "user", content: prompt }
+  ]
 })
-});
+
 
 const data = await response.json();
 
