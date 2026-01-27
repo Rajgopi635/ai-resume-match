@@ -1,19 +1,26 @@
 async function match(){
 
-const jd=document.getElementById("jd").value;
+const jd = document.getElementById("jd").value;
 
-const prompt=`Compare resume and job description. Give match percentage and skills.\n${jd}`;
+if(!jd){
+alert("Please paste Job Description");
+return;
+}
 
-const response=await fetch("/api",{
+document.getElementById("result").innerHTML="Matching...";
+
+const response = await fetch("/api",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
-body:JSON.stringify({prompt})
+body:JSON.stringify({
+prompt:`Compare this job description and resume. Give match percentage and skills:\n${jd}`
+})
 });
 
-const data=await response.json();
+const data = await response.json();
 
-document.getElementById("result").innerText=data.reply;
+document.getElementById("result").innerText = data.reply;
 
 }
