@@ -1,12 +1,12 @@
-export async function onRequestPost(context){
+export async function onRequestPost({ request, env }) {
 
-const body = await context.request.json();
+const body = await request.json();
 const prompt = body.prompt;
 
 const res = await fetch("https://api.groq.com/openai/v1/chat/completions",{
 method:"POST",
 headers:{
-"Authorization":`Bearer ${context.env.GROQ_KEY}`,
+"Authorization":`Bearer ${env.GROQ_KEY}`,
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
