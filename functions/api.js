@@ -1,5 +1,7 @@
 export async function onRequest(context) {
 
+try {
+
 if (context.request.method !== "POST") {
   return new Response("Method not allowed", { status: 405 });
 }
@@ -7,7 +9,7 @@ if (context.request.method !== "POST") {
 const body = await context.request.json();
 const prompt = body.prompt;
 
-const res = await fetch("https://api.groq.com/openai/v1/chat/completions",{
+const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions",{
 method:"POST",
 headers:{
 "Authorization":`Bearer ${context.env.GROQ_KEY}`,
@@ -16,19 +18,25 @@ headers:{
 body:JSON.stringify({
 model:"llama3-8b-8192",
 messages:[
-{
-role:"user",
-content:`Compare resume and job description. Give overall match percentage and list skills:\n${prompt}`
-}
+{role:"user",content:prompt}
 ]
 })
 });
 
-const data = await res.json();
+const groqData = await groqRes.text();
 
 return new Response(
-JSON.stringify({ reply: data.choices[0].message.content }),
+JSON.stringify({ reply: groqData }),
 { headers: { "Content-Type": "application/json" } }
 );
+
+} catch(err){
+
+return new Response(
+JSON.stringify({ error: err.toString() }),
+{ headers: { "Content-Type": "application/json" }, status:500 }
+);
+
+}
 
 }
