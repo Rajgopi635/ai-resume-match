@@ -1,0 +1,27 @@
+body{
+background:black;
+color:white;
+}
+
+.hero{
+height:100vh;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.left{
+width:50%;
+}
+
+textarea,input{
+width:100%;
+margin:10px 0;
+padding:10px;
+}
+
+button{
+background:orange;
+border:none;
+padding:10px 20px;
+}
