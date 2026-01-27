@@ -1,7 +1,5 @@
 export async function onRequest(context) {
 
-try {
-
 if (context.request.method !== "POST") {
   return new Response("Method not allowed", { status: 405 });
 }
@@ -9,34 +7,27 @@ if (context.request.method !== "POST") {
 const body = await context.request.json();
 const prompt = body.prompt;
 
-const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions",{
-method:"POST",
-headers:{
-"Authorization":`Bearer ${context.env.GROQ_KEY}`,
-"Content-Type":"application/json"
+const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+method: "POST",
+headers: {
+"Authorization": `Bearer ${context.env.GROQ_KEY}`,
+"Content-Type": "application/json"
 },
-body:JSON.stringify({
+body: JSON.stringify({
 model: "llama-3.1-8b-instant",
-messages:[
-{role:"user",content:prompt}
+messages: [
+{ role: "user", content: prompt }
 ]
 })
 });
 
-const groqData = await groqRes.text();
+const data = await groqRes.json();
 
 return new Response(
-JSON.stringify({ reply: groqData }),
+JSON.stringify({
+reply: data.choices[0].message.content
+}),
 { headers: { "Content-Type": "application/json" } }
 );
-
-} catch(err){
-
-return new Response(
-JSON.stringify({ error: err.toString() }),
-{ headers: { "Content-Type": "application/json" }, status:500 }
-);
-
-}
 
 }
