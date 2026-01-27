@@ -1,9 +1,11 @@
 async function match(){
 
-const jd = document.getElementById("jd").value;
+console.log("clicked");
+
+const jd=document.getElementById("jd").value;
 
 if(!jd){
-alert("Please paste Job Description");
+alert("Paste Job Description");
 return;
 }
 
@@ -15,12 +17,12 @@ headers:{
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-prompt:`Compare this job description and resume. Give match percentage and skills:\n${jd}`
+prompt:jd
 })
 });
 
 const data = await response.json();
 
-document.getElementById("result").innerText = data.reply;
+document.getElementById("result").innerText=data.reply;
 
 }
