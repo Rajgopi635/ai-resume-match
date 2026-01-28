@@ -1,100 +1,83 @@
-export async function onRequest(context) {
+export async function onRequestPost({ request, env }) {
 
-if (context.request.method !== "POST") {
-  return new Response("Method not allowed", { status: 405 });
+try {
+
+const body = await request.json();
+const resume = body.resume;
+const jd = body.jd;
+
+if (!resume || !jd) {
+return new Response(JSON.stringify({ reply: "Missing resume or JD" }), {
+headers: { "Content-Type": "application/json" }
+});
 }
 
-const body = await context.request.json();
-const prompt = body.prompt;
-
-const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-method: "POST",
-headers: {
-"Authorization": `Bearer ${context.env.GROQ_KEY}`,
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-model: "llama-3.1-8b-instant",
-messages: [
-{
-role: "user",
-content: `
+const prompt = `
 You are an expert technical recruiter.
 
-I will provide:
+Compare the following resume with the job description.
 
-1. Job Description
-2. Candidate Resume
-
-Your task:
-
-Return ONLY the following sections in clean readable plain text (no JSON, no markdown symbols):
-
----------------------
+Return ONLY plain text with these sections:
 
 SKILL WISE MATCH:
+Frontend:
+Backend:
+Databases:
+Cloud:
+Security:
+Ownership:
 
-Frontend (React / Angular / TypeScript / UI): XX%
-Backend & APIs (Python / FastAPI / REST / Microservices): XX%
-Databases (RDBMS + NoSQL): XX%
-Cloud & DevOps (AWS / CI/CD): XX%
-Security / Compliance: XX%
-Collaboration / Ownership: XX%
-Healthcare / Regulated Domain: XX%
-
-OVERALL MATCH: XX%
+OVERALL MATCH:
 
 MINOR GAPS:
-- gap 1
-- gap 2
-- gap 3
 
-CANDIDATE SUMMARY (4–5 lines):
-
-Write professional recruiter-style summary.
+CANDIDATE LEAD SUMMARY (4–5 lines):
 
 CLIENT SUBMISSION EMAIL:
 
-Subject: Submission – Senior Full Stack Engineer | Candidate Name
-
-Hi Adam,
-
-(short professional email)
-
-Thanks,
-Raaj
-
----------------------
-
-Rules:
-
-• Use realistic percentages  
-• Be concise  
-• No emojis  
-• No markdown  
-• No bullet icons  
-• Only clean recruiter formatting  
-• Do NOT explain yourself  
-• Do NOT add extra sections  
+No markdown.
+No JSON.
+No bullets.
+Professional recruiter tone.
 
 Job Description:
 ${jd}
 
 Resume:
-${resumeText}
-`
-}
-]
+${resume}
+`;
+
+const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+method: "POST",
+headers: {
+"Authorization": `Bearer ${env.GROQ_API_KEY}`,
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+model: "llama-3.1-8b-instant",
+messages: [{ role: "user", content: prompt }],
+temperature: 0.2
 })
 });
 
-const data = await groqRes.json();
+const groqData = await groqRes.json();
 
-return new Response(
-JSON.stringify({
-reply: data.choices[0].message.content
-}),
-{ headers: { "Content-Type": "application/json" } }
-);
+const reply =
+groqData.choices?.[0]?.message?.content ||
+"AI did not return result.";
+
+return new Response(JSON.stringify({ reply }), {
+headers: { "Content-Type": "application/json" }
+});
+
+} catch (e) {
+
+return new Response(JSON.stringify({
+reply: "Worker error: " + e.message
+}), {
+headers: { "Content-Type": "application/json" }
+});
+
+}
 
 }
