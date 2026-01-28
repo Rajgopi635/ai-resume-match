@@ -13,9 +13,15 @@ headers: { "Content-Type": "application/json" }
 }
 
 const prompt = `
-You are an ATS resume matcher.
+You are a recruitment resume matching assistant.
 
-Return STRICTLY in this format:
+FIRST extract:
+
+Candidate Name from resume
+Total Experience (approx if not exact)
+Job Title from JD
+
+Then return STRICTLY in this exact format:
 
 OVERALL_MATCH: XX%
 
@@ -33,10 +39,23 @@ MISSING_SKILLS:
 - skill3
 
 CANDIDATE_SUMMARY:
-4 lines professional summary.
+<Name> – <Job Title> (<Experience>)
+
+Write 3 short professional lines explaining candidate strengths aligned to JD. Keep concise recruiter tone.
 
 CLIENT_EMAIL:
-Short client submission email.
+Hi Hiring Manager,
+
+Please find below the profile of <Name> for the <Job Title> role.
+
+<Name> brings strong hands-on experience across frontend, backend, cloud, and secure application development, with proven delivery of scalable enterprise platforms aligned to your requirements.
+
+Overall match: XX%.
+
+Please let me know if you’d like to proceed with interview scheduling or need any additional details.
+
+Thanks,
+Raaj
 
 Resume:
 ${resume}

@@ -70,7 +70,7 @@ document.getElementById("matchBox").innerHTML = `
 
 <div class="card">
 <h3>Client Email</h3>
-<pre>${email}</pre>
+<div style="white-space:pre-wrap">${email}</div>
 </div>
 `;
 
