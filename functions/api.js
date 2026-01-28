@@ -19,15 +19,21 @@ messages: [
 {
 role: "user",
 content: `
-Analyze this resume against the job description below.
+Analyze this resume against the job description.
 
-Return ONLY ONE clean paragraph (no bullets, no markdown, no JSON, no percentages per skill).
+Return exactly in this format:
 
-Include:
-- Overall match percentage
-- Short professional summary
-- Key strengths
-- Any main gap (if exists)
+MATCH: <number>%
+
+SUMMARY: <2-3 professional lines>
+
+KEY_SKILLS:
+- skill
+- skill
+
+MISSING_SKILLS:
+- skill
+- skill
 
 Resume + JD:
 ${prompt}
