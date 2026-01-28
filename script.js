@@ -8,7 +8,7 @@ alert("Upload resume and paste JD");
 return;
 }
 
-document.getElementById("matchBox").innerHTML="Reading resume...";
+document.getElementById("matchBox").innerHTML = "Reading resume...";
 
 const reader = new FileReader();
 
@@ -25,7 +25,7 @@ const content = await page.getTextContent();
 content.items.forEach(item => resumeText += item.str + " ");
 }
 
-document.getElementById("matchBox").innerHTML="Matching...";
+document.getElementById("matchBox").innerHTML = "Matching with AI...";
 
 const response = await fetch("/api", {
 method: "POST",
@@ -33,36 +33,15 @@ headers: {
 "Content-Type": "application/json"
 },
 body: JSON.stringify({
-prompt: `Resume:\n${resumeText}\n\nJob Description:\n${jd}`
+resume: resumeText,
+jd: jd
 })
 });
 
 const data = await response.json();
 
-const text = data.reply;
-
-const match = text.match(/MATCH:\s*(.*)/)?.[1] || "";
-const summary = text.match(/SUMMARY:\s*([\s\S]*?)KEY_SKILLS:/)?.[1] || "";
-const skills = text.match(/KEY_SKILLS:\s*([\s\S]*?)MISSING_SKILLS:/)?.[1] || "";
-const missing = text.match(/MISSING_SKILLS:\s*([\s\S]*)/)?.[1] || "";
-
-const score = parseInt(match);
-
-document.getElementById("matchBox").innerHTML = `
-<h2>Match Score: ${match}</h2>
-<progress value="${score}" max="100"></progress>
-`;
-document.getElementById("summaryBox").innerHTML = `<p>${summary}</p>`;
-
-document.getElementById("skillsBox").innerHTML =
-"<h4>Key Skills</h4><ul>" +
-skills.split("-").filter(x=>x.trim()).map(s=>`<li>${s}</li>`).join("") +
-"</ul>";
-
-document.getElementById("missingBox").innerHTML =
-"<h4 style='color:red'>Missing Skills</h4><ul>" +
-missing.split("-").filter(x=>x.trim()).map(s=>`<li>${s}</li>`).join("") +
-"</ul>";
+document.getElementById("matchBox").innerText =
+data.choices[0].message.content;
 
 };
 

@@ -19,24 +19,69 @@ messages: [
 {
 role: "user",
 content: `
-Analyze this resume against the job description.
+You are an expert technical recruiter.
 
-Return exactly in this format:
+I will provide:
 
-MATCH: <number>%
+1. Job Description
+2. Candidate Resume
 
-SUMMARY: <2-3 professional lines>
+Your task:
 
-KEY_SKILLS:
-- skill
-- skill
+Return ONLY the following sections in clean readable plain text (no JSON, no markdown symbols):
 
-MISSING_SKILLS:
-- skill
-- skill
+---------------------
 
-Resume + JD:
-${prompt}
+SKILL WISE MATCH:
+
+Frontend (React / Angular / TypeScript / UI): XX%
+Backend & APIs (Python / FastAPI / REST / Microservices): XX%
+Databases (RDBMS + NoSQL): XX%
+Cloud & DevOps (AWS / CI/CD): XX%
+Security / Compliance: XX%
+Collaboration / Ownership: XX%
+Healthcare / Regulated Domain: XX%
+
+OVERALL MATCH: XX%
+
+MINOR GAPS:
+- gap 1
+- gap 2
+- gap 3
+
+CANDIDATE SUMMARY (4–5 lines):
+
+Write professional recruiter-style summary.
+
+CLIENT SUBMISSION EMAIL:
+
+Subject: Submission – Senior Full Stack Engineer | Candidate Name
+
+Hi Adam,
+
+(short professional email)
+
+Thanks,
+Raaj
+
+---------------------
+
+Rules:
+
+• Use realistic percentages  
+• Be concise  
+• No emojis  
+• No markdown  
+• No bullet icons  
+• Only clean recruiter formatting  
+• Do NOT explain yourself  
+• Do NOT add extra sections  
+
+Job Description:
+${jd}
+
+Resume:
+${resumeText}
 `
 }
 ]
