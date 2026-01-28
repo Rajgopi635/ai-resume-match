@@ -13,38 +13,36 @@ headers: { "Content-Type": "application/json" }
 }
 
 const prompt = `
-You are an expert technical recruiter.
+You are an ATS resume matcher.
 
-Compare the following resume with the job description.
+Return STRICTLY in this format:
 
-Return ONLY plain text with these sections:
+OVERALL_MATCH: XX%
 
-SKILL WISE MATCH:
-Frontend:
-Backend:
-Databases:
-Cloud:
-Security:
-Ownership:
+SKILL_MATCH:
+Frontend: X/10
+Backend: X/10
+Databases: X/10
+Cloud: X/10
+Security: X/10
+Ownership: X/10
 
-OVERALL MATCH:
+MISSING_SKILLS:
+- skill1
+- skill2
+- skill3
 
-MINOR GAPS:
+CANDIDATE_SUMMARY:
+4 lines professional summary.
 
-CANDIDATE LEAD SUMMARY (4–5 lines):
-
-CLIENT SUBMISSION EMAIL:
-
-No markdown.
-No JSON.
-No bullets.
-Professional recruiter tone.
-
-Job Description:
-${jd}
+CLIENT_EMAIL:
+Short client submission email.
 
 Resume:
 ${resume}
+
+Job Description:
+${jd}
 `;
 
 const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {

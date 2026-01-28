@@ -97,3 +97,12 @@ padding-left: 20px;
 #matchBox li {
 margin-bottom: 6px;
 }
+pre,p{
+color:white;
+white-space:pre-wrap;
+}
+
+.card{
+background:#1b1b1b;
+box-shadow:0 0 10px #000;
+}

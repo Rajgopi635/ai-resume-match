@@ -8,13 +8,11 @@ alert("Upload resume and paste JD");
 return;
 }
 
-document.getElementById("matchBox").innerText = "Reading resume...";
+document.getElementById("matchBox").innerHTML = "Reading resume...";
 
 const reader = new FileReader();
 
 reader.onload = async function () {
-
-try {
 
 const typedarray = new Uint8Array(this.result);
 const pdf = await pdfjsLib.getDocument(typedarray).promise;
@@ -27,48 +25,54 @@ const content = await page.getTextContent();
 content.items.forEach(item => resumeText += item.str + " ");
 }
 
-document.getElementById("matchBox").innerText = "Matching with AI...";
+document.getElementById("matchBox").innerHTML = "Matching with AI...";
 
 const response = await fetch("/api", {
 method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
+headers: { "Content-Type": "application/json" },
 body: JSON.stringify({
 resume: resumeText,
 jd: jd
 })
 });
 
-// 🔴 HTTP failure
-if (!response.ok) {
-const err = await response.text();
-document.getElementById("matchBox").innerText =
-"API Error:\n" + err;
-return;
-}
-
 const data = await response.json();
 
-console.log("API Response:", data);
+const txt = data.reply || "";
 
-// 🔴 Empty response
-if (!data.reply) {
-document.getElementById("matchBox").innerText =
-"Empty AI response:\n" + JSON.stringify(data);
-return;
-}
+// Extract values
+const overall = txt.match(/OVERALL_MATCH:\s*(.*)/)?.[1] || "";
+const skills = txt.match(/SKILL_MATCH:([\s\S]*?)MISSING_SKILLS:/)?.[1] || "";
+const missing = txt.match(/MISSING_SKILLS:([\s\S]*?)CANDIDATE_SUMMARY:/)?.[1] || "";
+const summary = txt.match(/CANDIDATE_SUMMARY:([\s\S]*?)CLIENT_EMAIL:/)?.[1] || "";
+const email = txt.match(/CLIENT_EMAIL:([\s\S]*)/)?.[1] || "";
 
-// ✅ SUCCESS
-document.getElementById("matchBox").innerText = data.reply;
+// UI render
+document.getElementById("matchBox").innerHTML = `
+<div class="card">
+<h2>Overall Match ${overall}</h2>
+</div>
 
-} catch (e) {
+<div class="card">
+<h3>Skill Ratings</h3>
+<pre>${skills}</pre>
+</div>
 
-document.getElementById("matchBox").innerText =
-"Frontend Error:\n" + e.message;
+<div class="card">
+<h3 style="color:red">Missing Skills</h3>
+<pre>${missing}</pre>
+</div>
 
-console.error(e);
-}
+<div class="card">
+<h3>Candidate Summary</h3>
+<p>${summary}</p>
+</div>
+
+<div class="card">
+<h3>Client Email</h3>
+<pre>${email}</pre>
+</div>
+`;
 
 };
 
