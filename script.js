@@ -40,8 +40,7 @@ jd: jd
 
 const data = await response.json();
 
-document.getElementById("matchBox").innerText =
-data.choices[0].message.content;
+document.getElementById("matchBox").innerText = data.reply;
 
 };
 
