@@ -62,9 +62,8 @@ temperature: 0.2
 
 const groqData = await groqRes.json();
 
-return new Response(JSON.stringify(groqData), {
-headers: { "Content-Type": "application/json" }
-});
+const reply =
+groqData.choices?.[0]?.message?.content || "No AI output";
 
 return new Response(JSON.stringify({ reply }), {
 headers: { "Content-Type": "application/json" }
