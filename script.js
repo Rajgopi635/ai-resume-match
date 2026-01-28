@@ -46,7 +46,12 @@ const summary = text.match(/SUMMARY:\s*([\s\S]*?)KEY_SKILLS:/)?.[1] || "";
 const skills = text.match(/KEY_SKILLS:\s*([\s\S]*?)MISSING_SKILLS:/)?.[1] || "";
 const missing = text.match(/MISSING_SKILLS:\s*([\s\S]*)/)?.[1] || "";
 
-document.getElementById("matchBox").innerHTML = `<h2>Match Score: ${match}</h2>`;
+const score = parseInt(match);
+
+document.getElementById("matchBox").innerHTML = `
+<h2>Match Score: ${match}</h2>
+<progress value="${score}" max="100"></progress>
+`;
 document.getElementById("summaryBox").innerHTML = `<p>${summary}</p>`;
 
 document.getElementById("skillsBox").innerHTML =
