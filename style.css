@@ -106,3 +106,15 @@ white-space:pre-wrap;
 background:#1b1b1b;
 box-shadow:0 0 10px #000;
 }
+#emailBox, #emailBox * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+#emailBox {
+  background: #111;
+  padding: 15px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
