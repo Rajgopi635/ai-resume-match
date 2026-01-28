@@ -29,7 +29,7 @@ cursor:pointer;
 }
 
 .card{
-background:#111;
+background:#181818;
 padding:15px;
 margin-top:15px;
 border-radius:10px;
@@ -64,4 +64,36 @@ margin-top:20px;
 
 img{
 display:none;
+}
+#matchBox {
+background: #151515;
+color: #ffffff;
+padding: 20px;
+border-radius: 12px;
+margin-top: 20px;
+line-height: 1.7;
+font-size: 15px;
+white-space: pre-wrap;
+box-shadow: 0 0 15px rgba(255,170,0,0.2);
+}
+
+/* Headings inside AI output */
+#matchBox h2,
+#matchBox h3 {
+color: #f5a400;
+margin-bottom: 10px;
+}
+
+/* Highlight sections */
+#matchBox strong {
+color: #00ffd5;
+}
+
+/* Bullet spacing */
+#matchBox ul {
+padding-left: 20px;
+}
+
+#matchBox li {
+margin-bottom: 6px;
 }
